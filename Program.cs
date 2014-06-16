@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RssGen
 {
@@ -52,8 +53,7 @@ namespace RssGen
 
         private string ReadSetting(string key)
         {
-            string value = System.Configuration.ConfigurationManager.AppSettings[key];
-            return value.Replace("&", "&amp;");
+            return HttpUtility.HtmlEncode(System.Configuration.ConfigurationManager.AppSettings[key]);
         }
 
         private void LoadSettings()
@@ -147,7 +147,7 @@ namespace RssGen
                 StringBuilder sb = new StringBuilder();
 
                 sb.Append("<item>\n");
-                sb.AppendFormat("\t<title>{0}</title>\n", title);
+                sb.AppendFormat("\t<title>{0}</title>\n", HttpUtility.HtmlEncode(title));
                 sb.AppendFormat("\t<pubDate>{0}</pubDate>\n", file.CreationTimeUtc.ToString("r"));
                 sb.AppendFormat("\t<guid isPermaLink=\"false\">{0}</guid>\n", url);
                 sb.AppendFormat("\t<enclosure url=\"{0}\" length=\"{1}\" type=\"audio/mpeg\" />\n", url, file.Length);
